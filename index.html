@@ -1,0 +1,3124 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: #79c7fb; transition: background-color 0.3s ease;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#79c7fb">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#79c7fb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Lantern Ario | AI interview intelligence</title>
+    <meta name="description" content="Lantern Ario turns conversations into clean briefs, notes, and decisions.">
+    <meta property="og:title" content="Lantern Ario | AI interview intelligence">
+    <meta property="og:description" content="A clean AI interface for hiring teams that want signal, not admin.">
+    <meta property="og:type" content="website">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;700&amp;family=Syne:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["Manrope", "sans-serif"],
+                        display: ["Space Grotesk", "sans-serif"],
+                        brand: ["Syne", "sans-serif"],
+                        editorial: ["Libre Baskerville", "serif"]
+                    },
+                    colors: {
+                        mist: "#efe7e3",
+                        accent: "#f4ebe7"
+                    },
+                    transitionTimingFunction: {
+                        premium: "cubic-bezier(0.32, 0.72, 0, 1)"
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        html {
+            background-color: #79c7fb; /* Set hero color onto base body to prevent black edges when scrolling past bounds on iOS */
+        }
+        :root {
+            color-scheme: dark;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --scroll-gradient-strength: 0.2;
+            --scroll-gradient-shift: 0px;
+            --hero-shift: 0px;
+            --hero-scale: 1;
+            --hero-veil: 0.18;
+            --hero-bloom: 0.32;
+            --hero-content-shift: 0px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background: linear-gradient(180deg, #bfd7ee 0%, #dce7f2 34%, #d9d7de 58%, #171315 100%);
+        }
+
+        body {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            color: #f7f2ef;
+            background:
+                linear-gradient(180deg, #bfd7ee 0%, #dce7f2 20%, #d9d7de 34%, #211c1f 62%, #171315 100%);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.12), transparent 16%),
+                radial-gradient(circle at 50% 22%, rgba(255,255,255,0.16), transparent 24%),
+                linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px);
+            background-size: auto, auto, 84px 84px, 84px 84px;
+            opacity: 0.38;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(46% 36% at 18% calc(16% + var(--scroll-gradient-shift)), rgba(244, 214, 203, 0.34), transparent 74%),
+                radial-gradient(42% 34% at 82% calc(22% + var(--scroll-gradient-shift)), rgba(161, 206, 255, 0.32), transparent 76%),
+                radial-gradient(54% 42% at 50% calc(74% + var(--scroll-gradient-shift)), rgba(244, 240, 255, 0.16), transparent 72%),
+                linear-gradient(180deg, rgba(151, 193, 233, 0.06) 0%, rgba(31, 27, 33, 0.04) 38%, rgba(16, 14, 17, 0.24) 100%);
+            opacity: calc(0.38 + var(--scroll-gradient-strength) * 0.75);
+            mix-blend-mode: screen;
+            animation: gradientFloat 18s cubic-bezier(0.32, 0.72, 0, 1) infinite alternate;
+        }
+
+        main,
+        header,
+        footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-sky {
+            background: linear-gradient(180deg, #bfd7ee 0%, #dce7f2 34%, #d9d7de 58%, #171315 100%);
+            overflow: hidden;
+        }
+
+        .hero-sky-media,
+        .hero-sky-ambient {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .hero-sky-media {
+            inset: -2% -2% 0;
+            background: url("./image.png") center top / cover no-repeat;
+            transform: translate3d(0, var(--hero-shift), 0) scale(var(--hero-scale));
+            transform-origin: center top;
+            will-change: transform;
+            transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .hero-sky-ambient {
+            background:
+                radial-gradient(36% 28% at 18% 24%, rgba(255, 220, 206, 0.42), transparent 72%),
+                radial-gradient(32% 24% at 82% 22%, rgba(176, 214, 255, 0.34), transparent 72%),
+                radial-gradient(42% 34% at 50% 72%, rgba(249, 236, 244, 0.22), transparent 74%);
+            opacity: calc(0.42 + var(--hero-bloom) * 0.4);
+            mix-blend-mode: screen;
+            animation: heroAmbientFloat 14s cubic-bezier(0.32, 0.72, 0, 1) infinite alternate;
+        }
+
+        .hero-sky::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.34), transparent 24%),
+                linear-gradient(180deg, rgba(255, 255, 255, calc(0.08 + var(--hero-bloom) * 0.12)), rgba(255, 255, 255, 0.02) 28%, rgba(20, 18, 21, 0.08) 60%, rgba(11, 10, 12, calc(0.2 + var(--hero-veil))) 100%);
+        }
+
+        .hero-sky::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0;
+            height: 44%;
+            pointer-events: none;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0), rgba(126, 160, 196, 0.08) 26%, rgba(29, 25, 29, 0.22) 66%, rgba(12, 10, 12, 0.54) 100%),
+                radial-gradient(70% 90% at 50% 100%, rgba(255, 230, 221, 0.16), transparent 68%);
+        }
+
+        #trust,
+        #cta {
+            position: relative;
+        }
+
+        #trust::before,
+        #cta::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: #ffffff;
+            opacity: 1;
+        }
+
+        .light-section {
+            position: relative;
+            color: #1f1932;
+            background: #ffffff;
+        }
+
+        #integrations,
+        #integrations::before {
+            background: #ffffff;
+        }
+
+        #integrations::before {
+            content: none;
+        }
+
+        .light-section .section-shell {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(106, 89, 182, 0.08);
+            border-radius: 2rem;
+            background: #ffffff;
+            box-shadow:
+                0 20px 54px rgba(91, 78, 146, 0.06),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+
+        .light-section .section-shell::before {
+            content: none;
+        }
+
+        .light-section .section-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .light-section .eyebrow {
+            color: #6859a8;
+        }
+
+        .light-section .heading {
+            color: #171226;
+        }
+
+        .light-section .body-copy {
+            color: #3a334f;
+        }
+
+        .light-section .line-soft {
+            border-color: rgba(98, 83, 171, 0.12);
+        }
+
+        footer {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .light-panel {
+            border: 1px solid rgba(106, 89, 182, 0.1);
+            border-radius: 1.4rem;
+            background: #ffffff;
+            box-shadow: 0 12px 28px rgba(98, 83, 171, 0.05);
+        }
+
+        .light-pill {
+            background: rgba(106, 89, 182, 0.08);
+            border: 1px solid rgba(106, 89, 182, 0.12);
+            color: #493b84;
+        }
+
+        .light-tab-active {
+            background: transparent;
+            color: #171226;
+            box-shadow: none;
+        }
+
+        .light-tab-idle {
+            color: rgba(67, 58, 100, 0.52);
+        }
+
+        @keyframes sectionGradientFloat {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            100% {
+                transform: translate3d(0, -2%, 0) scale(1.03);
+            }
+        }
+
+        .text-balance {
+            text-wrap: balance;
+        }
+
+        .text-pretty {
+            text-wrap: pretty;
+        }
+
+        .hero-copy-stack {
+            position: relative;
+            isolation: isolate;
+            padding-inline: 1.5rem;
+            padding-block: 1rem;
+            transform: translate3d(0, var(--hero-content-shift), 0);
+            transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .hero-copy-stack::before {
+            content: "";
+            position: absolute;
+            inset: -2.5rem -3rem -1.75rem;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                radial-gradient(60% 55% at 50% 28%, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.24) 45%, rgba(255, 255, 255, 0.08) 72%, transparent 100%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04) 58%, transparent 100%);
+            filter: blur(20px);
+            opacity: 0.92;
+        }
+
+        .hero-copy {
+            text-shadow:
+                0 2px 12px rgba(255, 255, 255, 0.22),
+                0 14px 34px rgba(44, 69, 108, 0.22),
+                0 0 1px rgba(255, 255, 255, 0.65);
+        }
+
+        .hero-copy-prefix {
+            display: inline-block;
+        }
+
+        .hero-copy-prefix.is-typing::after {
+            content: "";
+            display: inline-block;
+            width: 1px;
+            height: 0.88em;
+            margin-left: 0.12rem;
+            vertical-align: -0.08em;
+            background: rgba(255, 255, 255, 0.92);
+            animation: askCaretBlink 0.9s steps(1) infinite;
+        }
+
+        .hero-subcopy,
+        .hero-trust {
+            text-shadow:
+                0 8px 22px rgba(37, 52, 81, 0.22),
+                0 0 1px rgba(255, 255, 255, 0.45);
+        }
+
+        .glass-pill {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .preview-surface {
+            background: transparent;
+            border: 0;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: none;
+        }
+
+        #preview-tabs {
+            border-color: rgba(255, 255, 255, 0.22);
+        }
+
+        .preview-tab {
+            position: relative;
+            color: rgba(255, 255, 255, 0.76) !important;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            letter-spacing: 0.01em;
+        }
+
+        .preview-tab:hover {
+            color: #ffffff !important;
+        }
+
+        .preview-tab::after {
+            content: "";
+            position: absolute;
+            left: 0.9rem;
+            right: 0.9rem;
+            bottom: -1.55rem;
+            height: 2px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0);
+            transition: background 240ms cubic-bezier(0.32, 0.72, 0, 1), transform 240ms cubic-bezier(0.32, 0.72, 0, 1);
+            transform: scaleX(0.68);
+        }
+
+        .preview-tab[aria-selected="true"] {
+            color: #ffffff !important;
+        }
+
+        .preview-tab[aria-selected="true"]::after {
+            background: rgba(255, 255, 255, 0.96);
+            transform: scaleX(1);
+        }
+
+        .live-session {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
+                rgba(16, 15, 18, 0.44);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                0 22px 70px rgba(0, 0, 0, 0.18);
+        }
+
+        .live-meta-chip {
+            border: 1px solid rgba(255,255,255,0.09);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .live-transcript {
+            border: 1px solid rgba(255,255,255,0.08);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)),
+                rgba(10, 10, 12, 0.3);
+        }
+
+        .transcript-row {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .speaker-badge {
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+
+        .speaker-badge.candidate {
+            background: rgba(88, 133, 255, 0.12);
+            color: rgba(218, 228, 255, 0.96);
+            border-color: rgba(120, 157, 255, 0.18);
+        }
+
+        .speaker-badge.interviewer {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        .transcript-bubble {
+            border: 1px solid rgba(255,255,255,0.08);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
+                rgba(255,255,255,0.02);
+        }
+
+        .transcript-bubble.candidate {
+            background:
+                linear-gradient(180deg, rgba(108, 144, 255, 0.12), rgba(108, 144, 255, 0.04)),
+                rgba(255,255,255,0.02);
+            border-color: rgba(126, 160, 255, 0.16);
+        }
+
+        .app-demo {
+            overflow: hidden;
+            border-radius: 1.6rem;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: #f6f4fb;
+            box-shadow:
+                0 22px 80px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255,255,255,0.22);
+            color: #1d1830;
+        }
+
+        .app-demo-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem 1.15rem;
+            background: #ddd8eb;
+            border-bottom: 1px solid rgba(64, 53, 102, 0.08);
+        }
+
+        .app-browser-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .app-browser-dot {
+            width: 0.72rem;
+            height: 0.72rem;
+            border-radius: 999px;
+            background: #c4bed8;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.32);
+        }
+
+        .app-browser-dot.active {
+            background: #6c4cf0;
+        }
+
+        .app-top-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .app-icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.15rem;
+            height: 2.15rem;
+            border-radius: 0.75rem;
+            color: #2f2742;
+            background: rgba(255,255,255,0.58);
+            border: 1px solid rgba(64, 53, 102, 0.08);
+        }
+
+        .app-demo-main {
+            display: grid;
+            grid-template-columns: 72px minmax(0, 1fr) 160px;
+            min-height: 560px;
+        }
+
+        .app-left-rail,
+        .app-right-rail {
+            background: rgba(255,255,255,0.72);
+        }
+
+        .app-left-rail {
+            border-right: 1px solid rgba(64, 53, 102, 0.08);
+            padding: 1.15rem 0.75rem;
+        }
+
+        .app-right-rail {
+            border-left: 1px solid rgba(64, 53, 102, 0.08);
+            padding: 1rem 0.8rem;
+        }
+
+        .app-content {
+            background: #fffefe;
+            padding: 1.35rem 1.45rem 1.2rem;
+        }
+
+        .app-content-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .app-rail-icon {
+            display: grid;
+            height: 2.8rem;
+            width: 2.8rem;
+            place-items: center;
+            border-radius: 0.95rem;
+            color: #2a2340;
+            background: transparent;
+            font-size: 1rem;
+        }
+
+        .app-rail-icon.active {
+            background: #2f2742;
+            color: #ffffff;
+            box-shadow: 0 10px 24px rgba(80, 61, 150, 0.18);
+        }
+
+        .app-rail-line {
+            margin: 0.85rem auto;
+            height: 0.9rem;
+            width: 2.4rem;
+            border-radius: 999px;
+            background: rgba(82, 65, 146, 0.08);
+        }
+
+        .app-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .app-title-row h3,
+        .app-title-row p,
+        .app-content p,
+        .app-content span,
+        .app-content li,
+        .app-content button {
+            color: inherit;
+        }
+
+        .app-tab-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            color: #6c4cf0;
+        }
+
+        .app-divider {
+            height: 1px;
+            background: rgba(80, 61, 150, 0.12);
+        }
+
+        .app-transcript-row {
+            display: grid;
+            grid-template-columns: 64px 92px minmax(0, 1fr);
+            gap: 1rem;
+            padding: 0.85rem 0;
+            border-bottom: 1px solid rgba(80, 61, 150, 0.08);
+        }
+
+        .app-transcript-row:last-child {
+            border-bottom: 0;
+        }
+
+        .app-time {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #6d5ac1;
+            text-align: right;
+            padding-top: 0.15rem;
+        }
+
+        .app-speaker {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #46405b;
+            padding-top: 0.05rem;
+        }
+
+        .app-speaker-avatar {
+            display: grid;
+            height: 1.7rem;
+            width: 1.7rem;
+            place-items: center;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            color: white;
+            background: linear-gradient(180deg, #8b75f8, #5f41f0);
+        }
+
+        .app-speaker-avatar.alt {
+            background: linear-gradient(180deg, #f09b86, #cc6e5c);
+        }
+
+        .app-line {
+            position: relative;
+            padding-left: 1.25rem;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            color: #28233d;
+        }
+
+        .app-line::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.1rem;
+            bottom: 0.1rem;
+            width: 2px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #70f0e8, #f2d36f);
+            opacity: 0.8;
+        }
+
+        .app-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border-radius: 999px;
+            padding: 0.55rem 0.8rem;
+            background: #6a46f6;
+            color: #ffffff;
+            font-size: 0.84rem;
+            font-weight: 600;
+            box-shadow: 0 12px 24px rgba(103, 73, 246, 0.22);
+        }
+
+        .app-chip.ghost {
+            background: rgba(106, 70, 246, 0.08);
+            color: #6144da;
+            box-shadow: none;
+        }
+
+        .app-side-toggle {
+            border-radius: 1.2rem;
+            border: 1px solid rgba(80, 61, 150, 0.1);
+            background: #ffffff;
+            padding: 0.85rem 0.75rem;
+            text-align: center;
+            color: #2f2742;
+        }
+
+        .app-switch {
+            position: relative;
+            width: 2.8rem;
+            height: 1.5rem;
+            margin: 0 auto 0.5rem;
+            border-radius: 999px;
+            background: #6a46f6;
+        }
+
+        .app-switch::after {
+            content: "";
+            position: absolute;
+            top: 0.18rem;
+            right: 0.18rem;
+            width: 1.15rem;
+            height: 1.15rem;
+            border-radius: 999px;
+            background: #ffffff;
+        }
+
+        .app-note-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            margin-top: 1.2rem;
+        }
+
+        .app-note-card {
+            border: 1px solid rgba(80, 61, 150, 0.1);
+            border-radius: 1.15rem;
+            background: #fbfaff;
+            padding: 1rem;
+        }
+
+        .app-note-card h4 {
+            margin: 0;
+            font-size: 0.76rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #6d5ac1;
+        }
+
+        .app-note-card ul,
+        .app-note-card p {
+            margin: 0.75rem 0 0;
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: #342f46;
+        }
+
+        .app-note-card ul {
+            padding-left: 1rem;
+        }
+
+        .app-search-box {
+            margin-top: 1.2rem;
+            border: 1px solid rgba(80, 61, 150, 0.12);
+            border-radius: 1rem;
+            background: #faf9ff;
+            padding: 0.95rem 1rem;
+            color: #423c58;
+            font-size: 0.92rem;
+        }
+
+        .app-result-list {
+            margin-top: 1rem;
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .app-result {
+            border-left: 2px solid rgba(108, 76, 240, 0.18);
+            padding-left: 1rem;
+        }
+
+        .app-result-title {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #28233d;
+        }
+
+        .app-result p {
+            margin: 0.35rem 0 0;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #4c4762;
+        }
+
+        .app-summary-block {
+            margin-top: 1rem;
+            display: grid;
+            gap: 0.9rem;
+        }
+
+        .app-bottom-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            border-top: 1px solid rgba(80, 61, 150, 0.1);
+            margin-top: 1rem;
+            padding-top: 0.95rem;
+        }
+
+        .app-mini-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #3e3755;
+        }
+
+        .app-timeline {
+            flex: 1;
+            height: 0.32rem;
+            border-radius: 999px;
+            background:
+                linear-gradient(90deg, #6a46f6 0 14%, #f4d463 14% 20%, #70f0e8 20% 28%, #f29986 28% 34%, #6a46f6 34% 42%, #70f0e8 42% 58%, #f4d463 58% 66%, #6a46f6 66% 74%, #70f0e8 74% 86%, #f29986 86% 100%);
+            opacity: 0.72;
+        }
+
+        .app-persona-stack {
+            display: flex;
+            align-items: center;
+        }
+
+        .app-persona-stack span {
+            display: grid;
+            width: 1.9rem;
+            height: 1.9rem;
+            place-items: center;
+            margin-left: -0.35rem;
+            border-radius: 999px;
+            border: 2px solid #fffefe;
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+
+        .app-image-frame {
+            border-radius: 1.15rem;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.42);
+            background: rgba(255,255,255,0.52);
+            box-shadow: 0 28px 70px rgba(56, 46, 96, 0.14);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .app-image-frame img {
+            display: block;
+            width: 100%;
+            height: auto;
+            opacity: 0.78;
+        }
+
+        .preview-panel .app-image-frame {
+            max-width: 1120px;
+            margin: 0 auto;
+        }
+
+        .ask-memory-section {
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .use-case-section {
+            background:
+                radial-gradient(circle at top center, rgba(59, 130, 246, 0.08), transparent 26%),
+                #ffffff;
+        }
+
+        .use-case-intro {
+            max-width: 760px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .use-case-grid {
+            margin-top: 0;
+            display: flex;
+            gap: 2rem;
+            width: max-content;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+        }
+
+        .use-case-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+            flex: 0 0 min(35rem, calc(100vw - 10rem));
+            width: min(35rem, calc(100vw - 10rem));
+        }
+
+        .use-case-scroll-shell {
+            position: relative;
+            margin-top: 4.5rem;
+            min-height: 100dvh;
+        }
+
+        .use-case-sticky {
+            position: sticky;
+            top: 5.75rem;
+            overflow: hidden;
+        }
+
+        .use-case-visual {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        .use-case-surface {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            background: rgba(255, 255, 255, 0.88);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.94),
+                0 24px 44px rgba(77, 109, 173, 0.12);
+            padding: 1.35rem;
+        }
+
+        .use-case-image-frame {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            max-width: 100%;
+            height: auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1.35rem;
+            border: 1px solid rgba(255, 255, 255, 0.64);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(233, 242, 255, 0.16)),
+                rgba(255, 255, 255, 0.12);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.78),
+                inset 0 -1px 0 rgba(173, 205, 246, 0.08),
+                0 14px 30px rgba(77, 109, 173, 0.08);
+            backdrop-filter: blur(18px) saturate(1.12);
+            -webkit-backdrop-filter: blur(18px) saturate(1.12);
+            padding: 0.4rem;
+        }
+
+        .use-case-image-frame::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.06) 34%, transparent 54%),
+                radial-gradient(70% 58% at 18% 0%, rgba(255, 255, 255, 0.32), transparent 42%);
+            z-index: 1;
+        }
+
+        .use-case-image-frame img {
+            display: block;
+            width: auto;
+            max-width: 100%;
+            height: auto;
+            image-rendering: auto;
+            position: relative;
+            z-index: 0;
+        }
+
+        .use-case-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            color: #2c263f;
+        }
+
+        .use-case-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.74rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #3b82f6;
+        }
+
+        .use-case-label::before {
+            content: "";
+            width: 0.46rem;
+            height: 0.46rem;
+            border-radius: 999px;
+            background: #3b82f6;
+        }
+
+        .use-case-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: #eff6ff;
+            border: 1px solid rgba(59, 130, 246, 0.14);
+            color: #4a6ea5;
+            padding: 0.45rem 0.75rem;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .use-case-brief {
+            margin-top: 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+
+        .use-case-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: rgba(59, 130, 246, 0.08);
+            color: #4a6ea5;
+            padding: 0.5rem 0.78rem;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .use-case-quote-stack {
+            margin-top: 1rem;
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .use-case-quote {
+            border-radius: 1.1rem;
+            background: #f8fbff;
+            border: 1px solid rgba(59, 130, 246, 0.08);
+            padding: 1rem 1rem 0.85rem;
+        }
+
+        .use-case-quote p {
+            margin: 0;
+            color: #29233d;
+            font-size: 1rem;
+            line-height: 1.55;
+        }
+
+        .use-case-time {
+            margin-top: 0.75rem;
+            color: #7a7490;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+
+        .use-case-foot {
+            margin-top: 0.9rem;
+            border-top: 1px solid rgba(59, 130, 246, 0.08);
+            padding-top: 0.9rem;
+            color: #426493;
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+
+        .use-case-score {
+            margin-top: 1.2rem;
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .use-case-score-row {
+            display: grid;
+            gap: 0.35rem;
+        }
+
+        .use-case-score-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            color: #463f62;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .use-case-score-bar {
+            height: 0.62rem;
+            border-radius: 999px;
+            background: #e8eef8;
+            overflow: hidden;
+        }
+
+        .use-case-score-fill {
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        }
+
+        .use-case-note {
+            margin-top: 1rem;
+            border-radius: 1.15rem;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            background: #fbfdff;
+            padding: 1rem;
+        }
+
+        .use-case-note-title {
+            color: #3b82f6;
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .use-case-note p {
+            margin: 0.8rem 0 0;
+            color: #2b2440;
+            font-size: 0.96rem;
+            line-height: 1.6;
+        }
+
+        .use-case-compare-grid {
+            margin-top: 1.2rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.8rem;
+        }
+
+        .use-case-candidate {
+            border-radius: 1.15rem;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            background: #fbfdff;
+            padding: 0.95rem;
+        }
+
+        .use-case-candidate h3 {
+            margin: 0;
+            color: #221c35;
+            font-size: 0.92rem;
+            font-weight: 800;
+        }
+
+        .use-case-candidate p {
+            margin: 0.3rem 0 0;
+            color: #6f6885;
+            font-size: 0.76rem;
+            line-height: 1.45;
+        }
+
+        .use-case-candidate ul {
+            margin: 0.75rem 0 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 0.45rem;
+        }
+
+        .use-case-candidate li {
+            color: #3b82f6;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .use-case-card h3 {
+            margin: 0;
+            color: #1d1830;
+            font-size: clamp(2rem, 2.2vw, 2.4rem);
+            line-height: 1.02;
+            letter-spacing: -0.04em;
+        }
+
+        .use-case-card p {
+            margin: 0.9rem 0 0;
+            color: #5d5871;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .ask-memory-head {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.35rem;
+        }
+
+        .ask-memory-stage {
+            position: relative;
+            margin: 7.5rem auto 0;
+            max-width: 1060px;
+            perspective: 1400px;
+        }
+
+        .ask-memory-stage::before {
+            content: "";
+            position: absolute;
+            inset: 20% -10% -18%;
+            background: radial-gradient(ellipse at center, rgba(36, 28, 72, 0.16), transparent 68%);
+            filter: blur(24px);
+            opacity: 0.7;
+        }
+
+        @keyframes askBoardGlow {
+            0% {
+                transform: translate3d(-8%, 0, 0);
+                opacity: 0.42;
+            }
+            100% {
+                transform: translate3d(8%, -3%, 0);
+                opacity: 0.78;
+            }
+        }
+
+        @keyframes askRowDrift {
+            0%, 100% {
+                transform: translate3d(0, 0, 0);
+                opacity: 0.68;
+            }
+            50% {
+                transform: translate3d(10px, 0, 0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes askClockSpin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes askSendPulse {
+            0%, 100% {
+                transform: translate3d(0, 0, 0) scale(1);
+                box-shadow: 0 14px 28px rgba(59, 130, 246, 0.24);
+            }
+            50% {
+                transform: translate3d(0, -2px, 0) scale(1.03);
+                box-shadow: 0 18px 34px rgba(59, 130, 246, 0.34);
+            }
+        }
+
+        @keyframes askIconFloat {
+            0%, 100% {
+                transform: translate3d(0, 0, 0);
+            }
+            50% {
+                transform: translate3d(0, -2px, 0);
+            }
+        }
+
+        @keyframes askCaretBlink {
+            0%, 44% {
+                opacity: 1;
+            }
+            45%, 100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes setupProgressGrow {
+            0% {
+                transform: scaleX(0);
+                opacity: 0.72;
+            }
+            100% {
+                transform: scaleX(1);
+                opacity: 1;
+            }
+        }
+
+        .ask-query-board {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1.7rem;
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid rgba(38, 32, 56, 0.08);
+            box-shadow:
+                0 34px 70px rgba(34, 29, 48, 0.13),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            transform: rotateX(12deg);
+            transform-origin: center bottom;
+        }
+
+        .ask-query-board::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.72) 34%, rgba(255,255,255,0.22) 70%, rgba(255,255,255,0) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .ask-query-board::after {
+            content: "";
+            position: absolute;
+            inset: 8% -12% auto;
+            height: 52%;
+            background: radial-gradient(ellipse at center, rgba(96, 165, 250, 0.2), rgba(255, 255, 255, 0) 70%);
+            filter: blur(26px);
+            pointer-events: none;
+            z-index: 1;
+            animation: askBoardGlow 7.5s cubic-bezier(0.32, 0.72, 0, 1) infinite alternate;
+        }
+
+        .ask-query-list {
+            padding: 2.8rem 4rem 1.2rem;
+            display: grid;
+            gap: 1.25rem;
+            color: rgba(33, 30, 42, 0.34);
+            font-size: 1.12rem;
+            font-weight: 600;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .ask-query-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .ask-query-row span:last-child {
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.22);
+        }
+
+        .ask-query-text {
+            position: relative;
+            display: inline-block;
+            min-height: 1.4em;
+        }
+
+        .ask-query-text.is-typing::after {
+            content: "";
+            display: inline-block;
+            width: 1px;
+            height: 0.9em;
+            margin-left: 0.18rem;
+            vertical-align: -0.08em;
+            background: rgba(59, 130, 246, 0.78);
+            animation: askCaretBlink 0.9s steps(1) infinite;
+        }
+
+        .ask-query-clock {
+            display: inline-grid;
+            width: 1.25rem;
+            height: 1.25rem;
+            place-items: center;
+            border: 2px solid rgba(33, 30, 42, 0.22);
+            border-radius: 999px;
+            color: rgba(33, 30, 42, 0.5);
+            font-size: 1rem;
+            font-style: normal;
+        }
+
+        .ask-input-bar {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 1.15rem;
+            border-top: 1px solid rgba(38, 32, 56, 0.08);
+            background: rgba(255, 255, 255, 0.94);
+            padding: 1.15rem 1.35rem;
+            color: rgba(33, 30, 42, 0.52);
+            font-size: 1.35rem;
+            font-weight: 500;
+        }
+
+        .ask-input-plus {
+            color: #171226;
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        .ask-input-spacer {
+            flex: 1;
+        }
+
+        .ask-input-icon {
+            display: inline-grid;
+            width: 2.6rem;
+            height: 2.6rem;
+            place-items: center;
+            border-radius: 999px;
+            color: #3b82f6;
+            font-size: 1.35rem;
+            animation: askIconFloat 3.2s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+        }
+
+        .ask-input-send {
+            display: inline-grid;
+            width: 3.2rem;
+            height: 3.2rem;
+            place-items: center;
+            border-radius: 999px;
+            color: #ffffff;
+            background: linear-gradient(180deg, #60a5fa, #3b82f6);
+            box-shadow: 0 14px 28px rgba(59, 130, 246, 0.28);
+            font-size: 1.45rem;
+            line-height: 1;
+            animation: askSendPulse 3.8s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+        }
+
+        .ask-memory-head em {
+            display: inline-block;
+            padding-bottom: 0.08em;
+        }
+
+        .setup-flow {
+            background: #ffffff;
+        }
+
+        .setup-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            border-top: 1px solid rgba(59, 130, 246, 0.16);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.16);
+        }
+
+        .setup-step {
+            min-height: 420px;
+            padding: 2rem 2rem 2.4rem;
+            border-left: 1px solid rgba(59, 130, 246, 0.16);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .setup-step:first-child {
+            border-left: 0;
+        }
+
+        .setup-number {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #3b82f6;
+            letter-spacing: -0.03em;
+        }
+
+        .setup-visual {
+            min-height: 132px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .setup-progress {
+            width: min(100%, 330px);
+            border-radius: 1.1rem;
+            border: 1px solid rgba(59, 130, 246, 0.14);
+            background: #ffffff;
+            box-shadow: none;
+            padding: 1rem;
+        }
+
+        .setup-progress-bar {
+            position: relative;
+            height: 0.72rem;
+            border-radius: 999px;
+            overflow: hidden;
+            background: linear-gradient(90deg, #dbeafe 0 100%);
+        }
+
+        .setup-progress-bar::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            width: 76%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            transform-origin: left center;
+            animation: setupProgressGrow 1.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .setup-progress-text {
+            margin-top: 0.85rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #4b4267;
+        }
+
+        .setup-toggle {
+            width: min(100%, 360px);
+            border-radius: 1.2rem;
+            border: 1px solid rgba(59, 130, 246, 0.14);
+            background: #ffffff;
+            box-shadow: none;
+            padding: 0.8rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .setup-toggle span {
+            border-radius: 0.8rem;
+            padding: 0.85rem 0.9rem;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #5d5479;
+        }
+
+        .setup-toggle span:first-child {
+            background: #3b82f6;
+            color: #ffffff;
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.22);
+        }
+
+        .setup-meeting {
+            width: min(100%, 360px);
+            border-radius: 1.25rem;
+            border: 1px solid rgba(98, 83, 171, 0.13);
+            background: #ffffff;
+            box-shadow: none;
+            padding: 1rem;
+        }
+
+        .setup-meeting-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            color: #2c263f;
+            font-size: 0.86rem;
+            font-weight: 800;
+        }
+
+        .setup-meeting-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.18)),
+                rgba(255, 255, 255, 0.1);
+            color: #2c263f;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.88),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(12px) saturate(1.15);
+            -webkit-backdrop-filter: blur(12px) saturate(1.15);
+            padding: 0.35rem 0.65rem;
+            font-size: 0.72rem;
+            white-space: nowrap;
+        }
+
+        .setup-meeting-live::before {
+            content: "";
+            width: 0.42rem;
+            height: 0.42rem;
+            border-radius: 999px;
+            background: #21b66f;
+        }
+
+        .setup-participants {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.6rem;
+        }
+
+        .setup-participant {
+            aspect-ratio: 16 / 10;
+            border-radius: 0.8rem;
+            background:
+                linear-gradient(135deg, rgba(59, 130, 246, 0.16), rgba(255,255,255,0.7)),
+                #eff6ff;
+        }
+
+        .setup-step h3 {
+            color: #171226;
+            font-size: clamp(1.9rem, 3vw, 2.6rem);
+            line-height: 1.02;
+            letter-spacing: -0.04em;
+            margin: 0;
+        }
+
+        .setup-step p {
+            color: #3a334f;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin: 1rem 0 0;
+        }
+
+        @media (max-width: 768px) {
+            #hero {
+                padding-top: calc(7.5rem + var(--safe-top));
+                padding-bottom: 4.5rem;
+            }
+
+            .hero-copy {
+                font-size: clamp(2.25rem, 10vw, 3.35rem);
+                line-height: 1.04;
+            }
+
+            .hero-subcopy {
+                max-width: 30rem;
+                font-size: 0.98rem;
+                line-height: 1.75;
+            }
+
+            #preview-tabs {
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                gap: 0.35rem;
+                padding-bottom: 1rem;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #preview-tabs::-webkit-scrollbar {
+                display: none;
+            }
+
+            .preview-tab {
+                white-space: nowrap;
+                flex: 0 0 auto;
+                font-size: 0.72rem;
+                padding: 0.75rem 0.45rem;
+            }
+
+            .preview-tab::after {
+                left: 0.45rem;
+                right: 0.45rem;
+                bottom: -1rem;
+            }
+
+            .use-case-grid {
+                gap: 1.15rem;
+            }
+
+            .use-case-visual {
+                min-height: clamp(240px, 68vw, 360px);
+            }
+
+            .use-case-image-frame img {
+                width: 100%;
+                height: auto;
+            }
+
+            .use-case-scroll-shell {
+                margin-top: 3rem;
+            }
+
+            .use-case-sticky {
+                top: 5.2rem;
+            }
+
+            .use-case-card {
+                flex: 0 0 min(24rem, calc(100vw - 3rem));
+                width: min(24rem, calc(100vw - 3rem));
+            }
+
+            .use-case-compare-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ask-memory-head {
+                gap: 0.9rem;
+            }
+
+            .ask-memory-stage {
+                margin-top: 3rem;
+            }
+
+            .ask-query-board {
+                border-radius: 1.25rem;
+                transform: none;
+            }
+
+            .ask-query-list {
+                padding: 1.6rem 1.1rem 0.9rem;
+                gap: 1rem;
+                font-size: 0.92rem;
+            }
+
+            .ask-query-row {
+                gap: 0.75rem;
+            }
+
+            .ask-input-bar {
+                gap: 0.75rem;
+                padding: 0.95rem 1rem;
+                font-size: 1rem;
+            }
+
+            .ask-input-icon {
+                display: none;
+            }
+
+            .ask-input-send {
+                width: 2.55rem;
+                height: 2.55rem;
+                font-size: 1.1rem;
+            }
+
+            .setup-grid {
+                display: flex;
+                flex-wrap: nowrap;
+                gap: 0;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+                scrollbar-width: none;
+                border-bottom: 1px solid rgba(59, 130, 246, 0.16);
+                scroll-snap-type: x mandatory;
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .setup-grid::-webkit-scrollbar {
+                display: none;
+            }
+
+            .setup-step {
+                flex: 0 0 min(22rem, calc(100vw - 3rem));
+                width: min(22rem, calc(100vw - 3rem));
+                min-height: auto;
+                border-left: 1px solid rgba(59, 130, 246, 0.16);
+                border-top: 0;
+                padding: 2rem 1.25rem;
+                scroll-snap-align: start;
+                scroll-snap-stop: always;
+            }
+
+            .setup-step:first-child {
+                border-left: 0;
+            }
+
+            .setup-progress,
+            .setup-toggle,
+            .setup-meeting {
+                width: 100%;
+                max-width: 360px;
+            }
+
+            .integration-copy {
+                padding: 2.5rem 0 1rem;
+            }
+        }
+
+        .trust-shell {
+            position: relative;
+            overflow: visible;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .trust-shell::before {
+            content: none;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(170px, 1fr));
+            gap: 2rem;
+        }
+
+        .trust-card {
+            display: grid;
+            grid-template-rows: 190px auto;
+            align-items: center;
+            justify-content: center;
+            gap: 1.25rem;
+            text-align: center;
+            padding: 1.25rem 0.75rem;
+        }
+
+        .trust-mark {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 190px;
+            width: 100%;
+        }
+
+        .trust-mark.iso {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 190px;
+            width: 100%;
+        }
+
+        .trust-mark img {
+            display: block;
+            max-width: 180px;
+            max-height: 180px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            filter: none;
+            opacity: 1;
+        }
+
+        .trust-mark.iso img {
+            max-width: 190px;
+            max-height: 128px;
+        }
+
+        .trust-label {
+            font-size: 1.18rem;
+            font-weight: 800;
+            color: #171226 !important;
+            line-height: 1.2;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .trust-copy {
+            max-width: 760px;
+        }
+
+        .integrations-shell {
+            position: relative;
+            overflow: visible;
+            min-height: 760px;
+            background: #ffffff !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+
+        .integration-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            border: 1px solid rgba(106, 89, 182, 0.12);
+            background: #ffffff;
+            color: #6a5d91;
+            padding: 0.9rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: 0 12px 28px rgba(98, 83, 171, 0.08);
+        }
+
+        .integration-orb {
+            position: absolute;
+            display: grid;
+            place-items: center;
+            width: 132px;
+            height: 132px;
+            border-radius: 1.7rem;
+            border: 1px solid rgba(255,255,255,0.88);
+            background: #ffffff;
+            box-shadow:
+                0 20px 44px rgba(98, 83, 171, 0.08),
+                inset 0 1px 0 rgba(255,255,255,0.92);
+        }
+
+        .integration-logo {
+            display: grid;
+            place-items: center;
+            width: 82px;
+            height: 82px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .integration-logo img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .integration-orb.one { left: 0; top: 8%; }
+        .integration-orb.two { left: 8%; top: 29%; }
+        .integration-orb.three { left: 2%; top: 57%; }
+        .integration-orb.four { left: 10%; bottom: 3%; }
+        .integration-orb.five { right: 0; top: 13%; }
+        .integration-orb.six { right: 8%; top: 43%; }
+        .integration-orb.seven { right: 1%; bottom: 8%; }
+        .integration-orb.eight { right: 10%; bottom: 3%; }
+
+        .integration-copy {
+            position: relative;
+            z-index: 1;
+            max-width: 640px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 7rem 0;
+        }
+
+        @keyframes integrationRailSlide {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+            100% {
+                transform: translate3d(calc(-100% + 100vw - 3rem), 0, 0);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .integrations-shell {
+                min-height: auto;
+                padding-bottom: 2rem;
+                overflow: hidden !important;
+            }
+
+            .integration-orb {
+                position: relative;
+                left: auto !important;
+                right: auto !important;
+                top: auto !important;
+                bottom: auto !important;
+                width: 104px;
+                height: 104px;
+            }
+
+            .integration-logo {
+                width: 68px;
+                height: 68px;
+            }
+
+            .integration-cloud {
+                display: flex;
+                flex-wrap: nowrap;
+                width: max-content;
+                gap: 1rem;
+                margin-top: 2.5rem;
+                padding-inline: 0.25rem;
+                animation: integrationRailSlide 16s linear infinite alternate;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .app-demo-main {
+                grid-template-columns: 60px minmax(0, 1fr);
+            }
+
+            .app-right-rail {
+                display: none;
+            }
+
+            .trust-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .app-demo-topbar {
+                padding: 0.85rem 0.95rem;
+            }
+
+            .app-demo-main {
+                grid-template-columns: 1fr;
+            }
+
+            .app-left-rail {
+                display: none;
+            }
+
+            .app-content {
+                padding: 1rem;
+            }
+
+            .app-transcript-row {
+                grid-template-columns: 1fr;
+                gap: 0.4rem;
+            }
+
+            .app-time {
+                text-align: left;
+            }
+
+            .app-note-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1rem;
+                padding-bottom: 0.5rem;
+            }
+
+            .trust-card {
+                padding: 1rem 0.5rem;
+            }
+
+            .integration-cloud {
+                gap: 0.85rem;
+                animation-duration: 14s;
+            }
+
+            .integrations-shell {
+                background: transparent !important;
+                padding-top: 0;
+                padding-bottom: 1rem;
+            }
+
+            .integration-copy {
+                padding: 1.5rem 0 0.5rem;
+            }
+
+            .integration-cloud {
+                margin-top: 0.5rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .integration-orb {
+                width: 88px;
+                height: 88px;
+                border: 0;
+                background: transparent;
+                box-shadow: none;
+            }
+
+            .integration-logo {
+                width: 64px;
+                height: 64px;
+            }
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -0.45rem;
+            height: 1px;
+            background: rgba(255,255,255,0.8);
+            transform: scaleX(0.2);
+            opacity: 0;
+            transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1), opacity 320ms cubic-bezier(0.32, 0.72, 0, 1);
+        }
+
+        .nav-link:hover::after,
+        .nav-link:focus-visible::after {
+            transform: scaleX(1);
+            opacity: 1;
+        }
+
+        .site-header,
+        .site-header .site-brand,
+        .site-header .nav-link,
+        .site-header .site-login,
+        .site-header .mobile-menu a,
+        .site-header .menu-line {
+            transition:
+                color 260ms cubic-bezier(0.32, 0.72, 0, 1),
+                background 260ms cubic-bezier(0.32, 0.72, 0, 1),
+                border-color 260ms cubic-bezier(0.32, 0.72, 0, 1),
+                box-shadow 260ms cubic-bezier(0.32, 0.72, 0, 1);
+        }
+
+        .site-brand {
+            font-family: "Manrope", sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            line-height: 1;
+        }
+
+        .site-header.nav-scrolled .site-brand {
+            color: #171226 !important;
+            text-shadow: none;
+        }
+
+        .site-header.nav-scrolled nav.glass-pill,
+        .site-header.nav-scrolled .site-login,
+        .site-header.nav-scrolled .menu-toggle,
+        .site-header.nav-scrolled .mobile-menu .glass-pill {
+            background: rgba(255, 255, 255, 0.82);
+            border-color: rgba(23, 18, 38, 0.1);
+            box-shadow: 0 16px 38px rgba(34, 29, 48, 0.1);
+        }
+
+        .site-header.nav-scrolled .nav-link,
+        .site-header.nav-scrolled .mobile-menu a:not(.site-login) {
+            color: rgba(23, 18, 38, 0.72) !important;
+        }
+
+        .site-header.nav-scrolled .nav-link:hover,
+        .site-header.nav-scrolled .nav-link:focus-visible,
+        .site-header.nav-scrolled .mobile-menu a:not(.site-login):hover {
+            color: #171226 !important;
+        }
+
+        .site-header.nav-scrolled .nav-link::after {
+            background: rgba(23, 18, 38, 0.72);
+        }
+
+        .site-header.nav-scrolled .site-login {
+            color: #171226 !important;
+        }
+
+        .site-header.nav-scrolled .menu-line {
+            background: #171226 !important;
+        }
+
+        .reveal,
+        .reveal-group > * {
+            opacity: 0;
+            transform: translate3d(0, 36px, 0);
+            filter: blur(10px);
+            transition:
+                opacity 850ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 950ms cubic-bezier(0.22, 1, 0.36, 1),
+                filter 850ms cubic-bezier(0.22, 1, 0.36, 1);
+            transition-delay: var(--delay, 0ms);
+        }
+
+        .reveal.is-visible,
+        .reveal-group > *.is-visible {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+            filter: blur(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: translate3d(0, 20px, 0) scale(0.82);
+            filter: blur(8px);
+            transform-origin: center center;
+            transition:
+                opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 1100ms cubic-bezier(0.22, 1, 0.36, 1),
+                filter 900ms cubic-bezier(0.22, 1, 0.36, 1);
+            transition-delay: var(--delay, 0ms);
+        }
+
+        .reveal-scale.is-visible {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+            filter: blur(0);
+        }
+
+        .mobile-menu[aria-hidden="true"] {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .mobile-menu[aria-hidden="false"] {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .mobile-menu {
+            transition: none !important;
+        }
+
+        .menu-line {
+            transition:
+                transform 420ms cubic-bezier(0.32, 0.72, 0, 1),
+                opacity 240ms cubic-bezier(0.32, 0.72, 0, 1);
+            transform-origin: center;
+        }
+
+        .menu-toggle[aria-expanded="true"] .menu-line:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .menu-toggle[aria-expanded="true"] .menu-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle[aria-expanded="true"] .menu-line:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        @keyframes gradientFloat {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            100% {
+                transform: translate3d(0, -1.8%, 0) scale(1.03);
+            }
+        }
+
+        @keyframes heroAmbientFloat {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            100% {
+                transform: translate3d(0, -2.6%, 0) scale(1.04);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            .reveal,
+            .reveal-scale,
+            .reveal-group > *,
+            .menu-line,
+            .nav-link::after,
+            body::after,
+            .hero-sky-media,
+            .hero-copy-stack,
+            .hero-sky-ambient,
+            .ask-query-board::after,
+            .ask-query-row,
+            .ask-query-clock,
+            .ask-input-icon,
+            .ask-input-send,
+            .setup-progress-bar,
+            .setup-progress-bar::before,
+            .setup-progress,
+            .setup-toggle,
+            .setup-toggle span:first-child,
+            .setup-meeting,
+            .setup-meeting-live,
+            .setup-meeting-live::before,
+            .setup-participant {
+                opacity: 1 !important;
+                transform: none !important;
+                filter: none !important;
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .closing-headline {
+                line-height: 1.08;
+                padding-bottom: 0.12em;
+            }
+
+            .use-case-sticky {
+                top: 4.8rem;
+            }
+
+            .use-case-card {
+                flex: 0 0 calc(100vw - 2.2rem);
+                width: calc(100vw - 2.2rem);
+            }
+
+            .use-case-visual {
+                min-height: clamp(220px, 72vw, 320px);
+            }
+
+            #hero {
+                padding-top: calc(7rem + var(--safe-top));
+                padding-bottom: 3.75rem;
+            }
+
+            .hero-copy-stack {
+                padding-inline: 0.75rem;
+            }
+
+            .hero-copy-stack::before {
+                inset: -1.5rem -1rem -1rem;
+                filter: blur(16px);
+            }
+
+            .hero-copy {
+                font-size: clamp(2.15rem, 11vw, 2.8rem);
+            }
+
+            .hero-subcopy {
+                font-size: 0.94rem;
+                line-height: 1.65;
+            }
+        }
+
+    </style>
+</head>
+<body class="antialiased selection:bg-blue-500/35 selection:text-inherit">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[90] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-black">Skip to content</a>
+
+    <header id="site-header" class="site-header fixed inset-x-0 top-0 z-50 px-4 pt-[calc(1.25rem+var(--safe-top))] md:px-6">
+        <div class="mx-auto relative flex max-w-[1280px] items-center justify-between">
+            <a href="#hero" class="site-brand inline-flex items-center text-white">Lantern Ario</a>
+
+            <nav class="glass-pill absolute left-1/2 hidden -translate-x-1/2 items-center gap-12 rounded-full px-8 py-3 lg:flex">
+                <a href="#memory-search" class="nav-link relative text-sm text-white/72 transition-colors duration-300 hover:text-white">Overview</a>
+                <a href="#memory-search" class="nav-link relative text-sm text-white/72 transition-colors duration-300 hover:text-white">Solutions</a>
+                <a href="#trust" class="nav-link relative text-sm text-white/72 transition-colors duration-300 hover:text-white">Integrations</a>
+            </nav>
+
+            <div class="hidden lg:block">
+                <a href="#cta" class="site-login glass-pill inline-flex items-center rounded-full px-5 py-3 text-sm font-medium text-white transition-all duration-300 hover:bg-white/18">Log In</a>
+            </div>
+
+            <button id="menu-toggle" class="menu-toggle glass-pill ml-auto grid h-11 w-11 place-items-center rounded-full lg:hidden" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle navigation">
+                <span class="flex flex-col gap-[5px]">
+                    <span class="menu-line h-[1.5px] w-5 rounded-full bg-white"></span>
+                    <span class="menu-line h-[1.5px] w-5 rounded-full bg-white"></span>
+                    <span class="menu-line h-[1.5px] w-5 rounded-full bg-white"></span>
+                </span>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="mobile-menu mx-auto mt-3 max-w-[1280px] lg:hidden" aria-hidden="true">
+            <div class="glass-pill rounded-[28px] p-4">
+                <div class="space-y-3">
+                    <a href="#memory-search" class="block px-4 py-3 text-white/82">Overview</a>
+                    <a href="#memory-search" class="block px-4 py-3 text-white/82">Solutions</a>
+                    <a href="#trust" class="block px-4 py-3 text-white/82">Integrations</a>
+                    <a href="#cta" class="site-login inline-flex rounded-full bg-white px-5 py-3 text-sm font-medium text-[#2c2627]">Log In</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section id="hero" class="hero-sky relative px-4 pb-14 pt-32 md:px-6 md:pb-20 md:pt-36">
+            <div class="hero-sky-media"></div>
+            <div class="hero-sky-ambient"></div>
+            <div class="mx-auto flex min-h-[100dvh] max-w-[1280px] flex-col items-center text-center">
+                <div class="reveal hero-copy-stack flex max-w-4xl flex-col items-center">
+                    <h1 class="hero-copy text-balance max-w-4xl font-editorial text-[2.55rem] font-normal leading-[1.02] tracking-[-0.04em] text-white sm:text-[3.35rem] md:text-[4.35rem] lg:text-[4.9rem]">
+                        <span class="hero-copy-prefix">No.1</span>
+                        <span class="hero-copy-rest"> AI recording intelligence for hiring teams</span>
+                    </h1>
+
+                    <p class="hero-subcopy text-pretty mt-6 max-w-lg text-[0.98rem] leading-7 text-white/86 md:text-[1.04rem]">
+                        Lantern Ario turns every conversation into shared AI memory your team can search, revisit, and act on.
+                    </p>
+
+                    <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row">
+                        <a href="#cta" class="inline-flex items-center rounded-full bg-white px-6 py-4 text-sm font-semibold text-[#2d2829] transition-transform duration-300 hover:-translate-y-0.5">Get started</a>
+                    </div>
+                </div>
+
+                <div class="reveal mt-10 w-full max-w-5xl">
+                    <div class="preview-surface rounded-[30px] p-5 md:p-6">
+                        <div class="flex items-center justify-end text-white/58">
+                        </div>
+
+                        <div class="mx-auto mt-2 max-w-6xl text-left md:mt-4">
+                            <div id="preview-tabs" class="flex flex-wrap justify-center gap-x-8 gap-y-3 border-b border-white/10 pb-6">
+                                <button class="preview-tab px-2 py-3 text-sm font-semibold text-white" data-preview-tab="notes" aria-selected="true">AI Notes</button>
+                                <button class="preview-tab px-2 py-3 text-sm font-semibold text-white/72 transition-colors duration-300" data-preview-tab="live" aria-selected="false">Live Interview</button>
+                                <button class="preview-tab px-2 py-3 text-sm font-semibold text-white/72 transition-colors duration-300" data-preview-tab="memory" aria-selected="false">Memory Query</button>
+                                <button class="preview-tab px-2 py-3 text-sm font-semibold text-white/72 transition-colors duration-300" data-preview-tab="saved" aria-selected="false">Recruiting Memory</button>
+                            </div>
+
+                            <div class="mt-5 md:mt-6">
+                                <div class="preview-panel" data-preview-panel="notes">
+                                    <div class="app-image-frame">
+                                        <img src="./AI_Notes2.png" alt="AI Notes interface preview">
+                                    </div>
+                                </div>
+
+                                <div class="preview-panel hidden" data-preview-panel="live">
+                                    <div class="app-image-frame">
+                                        <img src="./LiveInterview.png" alt="Live interview interface preview">
+                                    </div>
+                                </div>
+
+                                <div class="preview-panel hidden" data-preview-panel="memory">
+                                    <div class="app-image-frame">
+                                        <img src="./MemorySection.png" alt="Memory Query interface preview">
+                                    </div>
+                                </div>
+
+                                <div class="preview-panel hidden" data-preview-panel="saved">
+                                    <div class="app-image-frame">
+                                        <img src="./recruiting.png" alt="Recruiting Memory interface preview">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="use-cases" class="use-case-section light-section px-4 py-24 md:px-6 md:py-32">
+            <div class="mx-auto max-w-[1240px] px-6 md:px-10">
+                <div class="reveal use-case-intro">
+                    <h2 class="heading font-editorial text-5xl leading-[1] tracking-[-0.04em] md:text-7xl md:whitespace-nowrap">
+                        Use it across every stage.
+                    </h2>
+                    <p class="body-copy mt-5 text-base leading-8 md:text-lg">
+                        Lantern Ario turns each messy conversation into the same clean decision layer, from kickoff to final comparison.
+                    </p>
+                </div>
+
+                <div class="use-case-scroll-shell">
+                    <div class="use-case-sticky">
+                        <div class="use-case-grid">
+                    <article class="reveal use-case-card">
+                        <div class="use-case-visual">
+                            <div class="use-case-image-frame">
+                                <img src="./display1.png" alt="Intake brief interface preview">
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Turn kickoff calls into role truth.</h3>
+                            <p>Scope, must-haves, risk, comp, and interview plan land in one shared brief before the first candidate screen.</p>
+                        </div>
+                    </article>
+
+                    <article class="reveal use-case-card">
+                        <div class="use-case-visual">
+                            <div class="use-case-image-frame">
+                                <img src="./display2.png" alt="Interview signal interface preview">
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Turn each interview into decision ready signal.</h3>
+                            <p>Notes, strengths, risks, and follow-up gaps come out structured the same way every time, even when different interviewers run the loop.</p>
+                        </div>
+                    </article>
+
+                    <article class="reveal use-case-card">
+                        <div class="use-case-visual">
+                            <div class="use-case-image-frame">
+                                <img src="./display3.png" alt="Candidate comparison interface preview">
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Compare candidates more easily.</h3>
+                            <p>Ario lines candidates up against the same decision frame so your team can see trade-offs quickly instead of relitigating every conversation from scratch.</p>
+                        </div>
+                    </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="memory-search" class="ask-memory-section light-section px-4 py-24 md:px-6 md:py-32">
+            <div class="mx-auto max-w-[1240px] px-6 md:px-10">
+                <div class="reveal ask-memory-head">
+                    <div>
+                        <h2 class="heading text-balance font-editorial text-5xl leading-[1] tracking-[-0.04em] md:text-7xl">
+                            Search every meeting memory
+                        </h2>
+                        <p class="body-copy mt-5 text-left text-base leading-8 md:text-lg max-w-5xl">
+                            Find what you need in seconds. Ask Lantern Ario for the important detail a candidate mentioned two months ago or identify patterns across dozens of conversations.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="reveal ask-memory-stage">
+                    <div class="ask-query-board" aria-label="Lantern Ario memory search preview">
+                        <div class="ask-query-list">
+                            <div class="ask-query-row">
+                                <span class="ask-query-text">What were the key takeaways from the last debrief?</span>
+                            </div>
+                            <div class="ask-query-row">
+                                <span class="ask-query-text">Who is the strongest candidate from this week’s interviews?</span>
+                            </div>
+                            <div class="ask-query-row">
+                                <span class="ask-query-text">What patterns are appearing across senior product interviews?</span>
+                            </div>
+                            <div class="ask-query-row">
+                                <span class="ask-query-text">What are engineers emphasizing in technical screens?</span>
+                            </div>
+                            <div class="ask-query-row">
+                                <span class="ask-query-text">What are the main blockers for this hiring loop?</span>
+                            </div>
+                            <div class="ask-query-row">
+                                <span class="ask-query-text">What have been the recurring topics this week?</span>
+                            </div>
+                        </div>
+                        <div class="ask-input-bar">
+                            <span class="ask-input-plus">+</span>
+                            <span>/ Ask Lantern Ario</span>
+                            <span class="ask-input-spacer"></span>
+                            <span class="ask-input-icon" aria-hidden="true">⌕</span>
+                            <span class="ask-input-send" aria-hidden="true">↑</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="setup-flow light-section px-4 py-24 md:px-6 md:py-32">
+            <div class="mx-auto max-w-[1240px] px-6 md:px-10">
+                <div class="reveal max-w-5xl">
+                    <h2 class="heading text-balance font-editorial text-5xl leading-[1] tracking-[-0.04em] md:text-7xl">
+                        Set up once. Show up everywhere
+                    </h2>
+                    <p class="body-copy mt-6 max-w-3xl text-base leading-8 md:text-lg">
+                        Lantern Ario takes five minutes to connect, then automatically joins your scheduled interviews and meetings so every conversation is captured without extra admin.
+                    </p>
+                </div>
+
+                <div class="setup-grid reveal mt-14">
+                    <div class="setup-step">
+                        <div class="setup-number">01</div>
+                        <div class="setup-visual">
+                            <div class="setup-progress">
+                                <div class="setup-progress-bar"></div>
+                                <div class="setup-progress-text">Connecting calendar and workspace</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Connect in five minutes.</h3>
+                            <p>Link your calendar, ATS, and meeting tools once. No long rollout, no heavy implementation.</p>
+                        </div>
+                    </div>
+
+                    <div class="setup-step">
+                        <div class="setup-number">02</div>
+                        <div class="setup-visual">
+                            <div class="setup-toggle" aria-label="Meeting capture settings preview">
+                                <span>Auto join</span>
+                                <span>Bot free</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Choose what it captures.</h3>
+                            <p>Set the rules for interviews, intake calls, and debriefs. Lantern Ario follows your team’s workflow.</p>
+                        </div>
+                    </div>
+
+                    <div class="setup-step">
+                        <div class="setup-number">03</div>
+                        <div class="setup-visual">
+                            <div class="setup-meeting" aria-label="Automatic meeting join preview">
+                                <div class="setup-meeting-top">
+                                    <span>Business Analyst Interview</span>
+                                    <span class="setup-meeting-live">Ario joined</span>
+                                </div>
+                                <div class="setup-participants">
+                                    <div class="setup-participant"></div>
+                                    <div class="setup-participant"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>It joins automatically.</h3>
+                            <p>When the meeting starts, Lantern Ario is there. Notes, transcript, and signals are ready after the call.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="trust" class="light-section px-4 py-24 md:px-6 md:py-32">
+            <div class="mx-auto max-w-[1240px]">
+                <div class="reveal trust-shell px-6 py-10 md:px-10 md:py-14">
+                    <div class="mx-auto max-w-4xl text-center">
+                        <h2 class="heading mt-5 font-editorial text-4xl leading-[1.02] tracking-[-0.04em] md:text-6xl">
+                            Enterprise Grade Security
+                        </h2>
+                        <p class="body-copy trust-copy mx-auto mt-5 text-base leading-8 md:text-lg">
+                            Built for hiring teams that need clean interview intelligence with the compliance, privacy controls, and operational confidence enterprise buyers expect.
+                        </p>
+                    </div>
+
+                    <div class="trust-grid mt-12">
+                        <div class="trust-card">
+                            <div class="trust-mark">
+                                <img src="./HIPAA.png" alt="HIPAA certification icon">
+                            </div>
+                            <div class="trust-label">HIPAA</div>
+                        </div>
+                        <div class="trust-card">
+                            <div class="trust-mark">
+                                <img src="./gdpr.webp" alt="GDPR compliance icon">
+                            </div>
+                            <div class="trust-label">GDPR</div>
+                        </div>
+                        <div class="trust-card">
+                            <div class="trust-mark">
+                                <img src="./Soc2.png" alt="SOC 2 Type I certification icon">
+                            </div>
+                            <div class="trust-label">SOC 2 Type II</div>
+                        </div>
+                        <div class="trust-card">
+                            <div class="trust-mark iso">
+                                <img src="./Iso27001.png" alt="ISO 27001 certification icon">
+                            </div>
+                            <div class="trust-label">ISO 27001</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="integrations" class="light-section px-4 py-10 md:px-6 md:py-16">
+            <div class="section-shell integrations-shell mx-auto max-w-[1240px] px-6 py-8 md:px-10 md:py-12">
+                <div class="integration-copy reveal">
+                    <div class="integration-badge">50+ ATS available</div>
+                    <h2 class="heading mt-8 font-editorial text-4xl leading-[1.02] tracking-[-0.04em] md:text-6xl">
+                        Connect every interview to your hiring stack
+                    </h2>
+                    <p class="body-copy mx-auto mt-6 max-w-3xl text-lg leading-9">
+                        Interview notes, transcripts, and scorecard signals move from Lantern Ario into your ATS, calendar, and meeting tools without manual updates or context switching.
+                    </p>
+                </div>
+
+                <div class="integration-cloud">
+                    <div class="integration-orb one">
+                        <div class="integration-logo">
+                            <img src="./icon1.webp" alt="Salesforce integration icon">
+                        </div>
+                    </div>
+                    <div class="integration-orb two">
+                        <div class="integration-logo">
+                            <img src="./icon2.png" alt="HubSpot integration icon">
+                        </div>
+                    </div>
+                    <div class="integration-orb three">
+                        <div class="integration-logo">
+                            <img src="./icon3.png" alt="Pipedrive ATS integration icon">
+                        </div>
+                    </div>
+                    <div class="integration-orb four">
+                        <div class="integration-logo">
+                            <img src="./icon4.png" alt="Zoom integration icon">
+                        </div>
+                    </div>
+                    <div class="integration-orb five">
+                        <div class="integration-logo">
+                            <img src="./icon6.png" alt="Google Calendar integration icon">
+                        </div>
+                    </div>
+                    <div class="integration-orb six">
+                        <div class="integration-logo">
+                            <img src="./icon7.png" alt="Slack integration icon">
+                        </div>
+                    </div>
+                    <div class="integration-orb seven">
+                        <div class="integration-logo">
+                            <img src="./icon8.png" alt="Jira integration icon">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cta" class="light-section px-4 pb-24 pt-8 md:px-6 md:pb-32">
+            <div class="mx-auto max-w-[1240px] px-6 py-10 md:px-10 md:py-14">
+            <div class="mx-auto max-w-[1120px] reveal pt-10">
+                <div class="grid gap-10 md:grid-cols-[0.85fr_1.15fr]">
+                    <div>
+                        <h2 class="heading text-balance font-editorial text-4xl leading-[1.02] tracking-[-0.04em] md:text-6xl">
+                            Hiring Intelligence FAQs
+                        </h2>
+                        <p class="body-copy mt-6 max-w-md text-lg leading-8">Quick answers for teams evaluating interview capture, privacy, and safe rollout.</p>
+                    </div>
+
+                    <div class="divide-y divide-[#e8e3f3]">
+                        <details class="group py-5" open>
+                            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold text-[#171226]">
+                                <span>What should interview intelligence do well?</span>
+                                <span class="text-xl text-[#6a46f6] transition-transform group-open:rotate-45">+</span>
+                            </summary>
+                            <p class="mt-3 text-sm leading-7 text-[#3a334f]">It should capture accurate transcripts, separate speakers, surface decision signals, and fit into the hiring tools your team already uses.</p>
+                        </details>
+                        <details class="group py-5">
+                            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold text-[#171226]">
+                                <span>Can Lantern Ario start with a small team?</span>
+                                <span class="text-xl text-[#6a46f6] transition-transform group-open:rotate-45">+</span>
+                            </summary>
+                            <p class="mt-3 text-sm leading-7 text-[#3a334f]">Teams can start with a lightweight setup and expand as hiring workflows grow. Final pricing depends on workspace size and rollout needs.</p>
+                        </details>
+                        <details class="group py-5">
+                            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold text-[#171226]">
+                                <span>Can we use offline interview recordings?</span>
+                                <span class="text-xl text-[#6a46f6] transition-transform group-open:rotate-45">+</span>
+                            </summary>
+                            <p class="mt-3 text-sm leading-7 text-[#3a334f]">Yes. Offline interview recordings can be turned into summaries, follow-ups, and searchable recruiting memory when uploaded securely.</p>
+                        </details>
+                        <details class="group py-5">
+                            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold text-[#171226]">
+                                <span>How private are interview records?</span>
+                                <span class="text-xl text-[#6a46f6] transition-transform group-open:rotate-45">+</span>
+                            </summary>
+                            <p class="mt-3 text-sm leading-7 text-[#3a334f]">Lantern Ario is designed around controlled access, retention settings, and enterprise security expectations for hiring conversations.</p>
+                        </details>
+                        <details class="group py-5">
+                            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold text-[#171226]">
+                                <span>Is interview recording legal and safe?</span>
+                                <span class="text-xl text-[#6a46f6] transition-transform group-open:rotate-45">+</span>
+                            </summary>
+                            <p class="mt-3 text-sm leading-7 text-[#3a334f]">They can be, when teams follow consent, recording, retention, and data-protection requirements for their region and interview process.</p>
+                        </details>
+                        <details class="group py-5">
+                            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold text-[#171226]">
+                                <span>What risks should hiring teams manage?</span>
+                                <span class="text-xl text-[#6a46f6] transition-transform group-open:rotate-45">+</span>
+                            </summary>
+                            <p class="mt-3 text-sm leading-7 text-[#3a334f]">The main risks are inaccurate summaries, unclear consent, and poor access control. Use source-backed notes and clear team policies to reduce those risks.</p>
+                        </details>
+                        <details class="group py-5">
+                            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold text-[#171226]">
+                                <span>Can Lantern Ario support more than interviews?</span>
+                                <span class="text-xl text-[#6a46f6] transition-transform group-open:rotate-45">+</span>
+                            </summary>
+                            <p class="mt-3 text-sm leading-7 text-[#3a334f]">Yes. Teams can use Lantern Ario for intake calls, interview loops, debriefs, memory search, scorecards, and ATS sync.</p>
+                        </details>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section class="light-section flex justify-center items-center px-4 pb-28 md:px-6 md:pb-36 w-full">
+            <div class="mx-auto w-full max-w-[1240px] px-6 py-12 md:px-10 md:py-16">
+                <div class="reveal-scale mx-auto w-full flex justify-center text-center">
+                    <h2 class="closing-headline heading font-editorial text-[9vw] leading-[1] whitespace-nowrap tracking-[-0.04em] sm:text-[8vw] md:text-7xl">
+                        We power what’s next.
+                    </h2>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-black px-4 py-12 md:px-6">
+        <div class="mx-auto max-w-[1120px] border-t border-white/10 pt-8">
+            <div class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+                <div>
+                    <a href="#hero" class="text-sm tracking-[0.22em] text-white/72">LANTERN ARIO</a>
+                    <p class="mt-4 max-w-md text-sm leading-7 text-white/46">Clean memory for hiring teams.</p>
+                </div>
+                <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm text-white/48">
+                    <a href="#memory-search" class="transition-colors duration-300 hover:text-white">Overview</a>
+                    <a href="#memory-search" class="transition-colors duration-300 hover:text-white">Solutions</a>
+                    <a href="#trust" class="transition-colors duration-300 hover:text-white">Integrations</a>
+                </div>
+            </div>
+            <div class="mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-white/34 md:flex-row md:items-center md:justify-between">
+                <span>Lantern Ario © 2026. All rights reserved.</span>
+                <div class="flex gap-6">
+                    <span>Privacy</span>
+                    <span>Terms</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener("load", function () {
+            const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const root = document.documentElement;
+            const hero = document.getElementById("hero");
+            const heroCopy = document.querySelector(".hero-copy");
+            const heroCopyPrefix = document.querySelector(".hero-copy-prefix");
+            const revealGroups = document.querySelectorAll(".reveal-group");
+            const revealTargets = document.querySelectorAll(".reveal, .reveal-scale, .reveal-group > *");
+            const menuToggle = document.getElementById("menu-toggle");
+            const mobileMenu = document.getElementById("mobile-menu");
+            const mobileLinks = mobileMenu ? mobileMenu.querySelectorAll("a") : [];
+            const siteHeader = document.getElementById("site-header");
+            const previewTabs = document.querySelectorAll(".preview-tab");
+            const previewPanels = document.querySelectorAll(".preview-panel");
+            const askMemorySection = document.getElementById("memory-search");
+            const askQueryTexts = askMemorySection ? Array.from(askMemorySection.querySelectorAll(".ask-query-text")) : [];
+            const setupSection = document.querySelector(".setup-flow");
+            const setupGrid = setupSection ? setupSection.querySelector(".setup-grid") : null;
+            const setupSteps = setupGrid ? Array.from(setupGrid.querySelectorAll(".setup-step")) : [];
+            const useCaseSection = document.getElementById("use-cases");
+            const useCaseShell = useCaseSection ? useCaseSection.querySelector(".use-case-scroll-shell") : null;
+            const useCaseSticky = useCaseSection ? useCaseSection.querySelector(".use-case-sticky") : null;
+            const useCaseTrack = useCaseSection ? useCaseSection.querySelector(".use-case-grid") : null;
+            const useCaseCards = useCaseTrack ? Array.from(useCaseTrack.querySelectorAll(".use-case-card")) : [];
+            let useCaseCurrentX = 0;
+            let useCaseTargetX = 0;
+            let useCaseAnimationFrame = null;
+            let askTypingStarted = false;
+            let setupAutoSlideIndex = 0;
+            let setupAutoSlideTimer = null;
+            let setupAutoSlideResumeTimer = null;
+            let setupAutoSlideObserver = null;
+            let setupAutoSlideActive = false;
+
+            revealGroups.forEach((group) => {
+                Array.from(group.children).forEach((child, index) => {
+                    child.style.setProperty("--delay", `${index * 85}ms`);
+                });
+            });
+
+            function revealNow(scope) {
+                if (!scope) return;
+                if (scope.matches && (scope.matches(".reveal") || scope.matches(".reveal-scale") || scope.matches(".reveal-group > *"))) {
+                    scope.classList.add("is-visible");
+                }
+                scope.querySelectorAll?.(".reveal, .reveal-scale, .reveal-group > *").forEach((node) => {
+                    node.classList.add("is-visible");
+                });
+            }
+
+            if (prefersReducedMotion) {
+                revealTargets.forEach((target) => target.classList.add("is-visible"));
+            } else {
+                const revealObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("is-visible");
+                            revealObserver.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.16,
+                    rootMargin: "0px 0px -8% 0px"
+                });
+
+                revealTargets.forEach((target) => revealObserver.observe(target));
+            }
+
+            function closeMenu() {
+                if (!menuToggle || !mobileMenu) return;
+                menuToggle.setAttribute("aria-expanded", "false");
+                mobileMenu.setAttribute("aria-hidden", "true");
+            }
+
+            function toggleMenu() {
+                if (!menuToggle || !mobileMenu) return;
+                const isExpanded = menuToggle.getAttribute("aria-expanded") === "true";
+                menuToggle.setAttribute("aria-expanded", String(!isExpanded));
+                mobileMenu.setAttribute("aria-hidden", String(isExpanded));
+            }
+
+            if (menuToggle) {
+                menuToggle.addEventListener("click", toggleMenu);
+            }
+
+            mobileLinks.forEach((link) => {
+                link.addEventListener("click", closeMenu);
+            });
+
+            function setActivePreview(tabName) {
+                previewTabs.forEach((tab) => {
+                    const isActive = tab.dataset.previewTab === tabName;
+                    tab.setAttribute("aria-selected", isActive ? "true" : "false");
+                    tab.classList.toggle("text-white", isActive);
+                    tab.classList.toggle("text-white/54", !isActive);
+                });
+
+                previewPanels.forEach((panel) => {
+                    panel.classList.toggle("hidden", panel.dataset.previewPanel !== tabName);
+                });
+            }
+
+            previewTabs.forEach((tab) => {
+                tab.addEventListener("click", function () {
+                    setActivePreview(tab.dataset.previewTab);
+                });
+            });
+
+            function setupHeroTypingAnimation() {
+                if (!heroCopy || !heroCopyPrefix || prefersReducedMotion || heroCopyPrefix.dataset.typed === "true") return;
+
+                const fullText = heroCopyPrefix.textContent.trim();
+                heroCopyPrefix.dataset.typed = "true";
+                heroCopyPrefix.textContent = "";
+                heroCopyPrefix.classList.add("is-typing");
+
+                let charIndex = 0;
+                const charDelay = window.innerWidth <= 768 ? 28 : 24;
+
+                const typeNext = () => {
+                    charIndex += 1;
+                    heroCopyPrefix.textContent = fullText.slice(0, charIndex);
+
+                    if (charIndex < fullText.length) {
+                        window.setTimeout(typeNext, charDelay);
+                    } else {
+                        heroCopyPrefix.classList.remove("is-typing");
+                    }
+                };
+
+                window.setTimeout(typeNext, 180);
+            }
+
+            function runAskTypingAnimation() {
+                if (askTypingStarted || prefersReducedMotion || askQueryTexts.length === 0) return;
+                askTypingStarted = true;
+
+                askQueryTexts.forEach((node, index) => {
+                    const fullText = node.textContent.trim();
+                    node.dataset.fullText = fullText;
+                    node.textContent = "";
+
+                    const startDelay = 180 + index * 420;
+                    const charDelay = fullText.length > 70 ? 13 : 18;
+
+                    window.setTimeout(() => {
+                        let charIndex = 0;
+                        node.classList.add("is-typing");
+
+                        const typeNext = () => {
+                            charIndex += 1;
+                            node.textContent = fullText.slice(0, charIndex);
+
+                            if (charIndex < fullText.length) {
+                                window.setTimeout(typeNext, charDelay);
+                            } else {
+                                node.classList.remove("is-typing");
+                            }
+                        };
+
+                        typeNext();
+                    }, startDelay);
+                });
+            }
+
+            if (!prefersReducedMotion && askMemorySection) {
+                const askMemoryObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            runAskTypingAnimation();
+                            askMemoryObserver.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.28,
+                    rootMargin: "0px 0px -10% 0px"
+                });
+
+                askMemoryObserver.observe(askMemorySection);
+            } else if (prefersReducedMotion) {
+                askQueryTexts.forEach((node) => {
+                    node.textContent = node.textContent.trim();
+                });
+            }
+
+            function syncScrollGradient() {
+                const maxScroll = Math.max(document.body.scrollHeight - window.innerHeight, 1);
+                const progress = Math.min(window.scrollY / maxScroll, 1);
+                const strength = 0.18 + progress * 0.7;
+                const shift = progress * 72;
+                root.style.setProperty("--scroll-gradient-strength", strength.toFixed(3));
+                root.style.setProperty("--scroll-gradient-shift", `${shift.toFixed(1)}px`);
+
+                if (hero) {
+                    const heroRect = hero.getBoundingClientRect();
+                    const heroTravel = Math.max(heroRect.height, 1);
+                    const heroProgress = Math.min(Math.max(-heroRect.top / heroTravel, 0), 1);
+                    const heroShift = heroProgress * 110;
+                    const heroScale = 1 + heroProgress * 0.06;
+                    const heroVeil = 0.16 + heroProgress * 0.3;
+                    const heroBloom = 0.32 + heroProgress * 0.36;
+                    const heroContentShift = heroProgress * -24;
+
+                    root.style.setProperty("--hero-shift", `${heroShift.toFixed(1)}px`);
+                    root.style.setProperty("--hero-scale", heroScale.toFixed(3));
+                    root.style.setProperty("--hero-veil", heroVeil.toFixed(3));
+                    root.style.setProperty("--hero-bloom", heroBloom.toFixed(3));
+                    root.style.setProperty("--hero-content-shift", `${heroContentShift.toFixed(1)}px`);
+
+                    if (siteHeader) {
+                        const isScrolled = heroRect.bottom < 120;
+                        siteHeader.classList.toggle("nav-scrolled", isScrolled);
+                        
+                        const themeColor = document.querySelectorAll('meta[name="theme-color"]');
+                        const newColor = isScrolled ? "#ffffff" : "#79c7fb"; // Light section bg (#ffffff) vs Hero bg
+                        themeColor.forEach(meta => meta.setAttribute("content", newColor));
+                        document.documentElement.style.backgroundColor = newColor;
+                    }
+                } else if (siteHeader) {
+                    const isScrolled = window.scrollY > 80;
+                    siteHeader.classList.toggle("nav-scrolled", isScrolled);
+                        
+                    const themeColor = document.querySelectorAll('meta[name="theme-color"]');
+                    const newColor = isScrolled ? "#ffffff" : "#79c7fb";
+                    themeColor.forEach(meta => meta.setAttribute("content", newColor));
+                    document.documentElement.style.backgroundColor = newColor;
+                }
+            }
+
+            function setupUseCaseScroller() {
+                if (!useCaseSection || !useCaseShell || !useCaseSticky || !useCaseTrack || useCaseCards.length === 0) return;
+
+                const stickyHeight = useCaseSticky.offsetHeight;
+                const trackWidth = useCaseTrack.scrollWidth;
+                const viewportWidth = useCaseSticky.clientWidth;
+                const scrollDistance = Math.max(trackWidth - viewportWidth, 0);
+                const leadIn = window.innerWidth <= 768
+                    ? Math.max(window.innerHeight * 0.28, 170)
+                    : Math.max(window.innerHeight * 0.32, 220);
+                const tailOut = Math.max(window.innerHeight * 0.2, 120);
+                useCaseShell.style.height = `${stickyHeight + leadIn + scrollDistance + tailOut}px`;
+            }
+
+            function renderUseCaseTrack() {
+                if (!useCaseTrack) return;
+
+                const easing = window.innerWidth <= 768 ? 0.12 : 0.18;
+                useCaseCurrentX += (useCaseTargetX - useCaseCurrentX) * easing;
+
+                if (Math.abs(useCaseTargetX - useCaseCurrentX) < 0.2) {
+                    useCaseCurrentX = useCaseTargetX;
+                }
+
+                useCaseTrack.style.transform = `translate3d(${-useCaseCurrentX.toFixed(2)}px, 0, 0)`;
+
+                if (Math.abs(useCaseTargetX - useCaseCurrentX) >= 0.2) {
+                    useCaseAnimationFrame = window.requestAnimationFrame(renderUseCaseTrack);
+                } else {
+                    useCaseAnimationFrame = null;
+                }
+            }
+
+            function queueUseCaseRender() {
+                if (useCaseAnimationFrame !== null) return;
+                useCaseAnimationFrame = window.requestAnimationFrame(renderUseCaseTrack);
+            }
+
+            function syncUseCaseScroller() {
+                if (!useCaseSection || !useCaseShell || !useCaseSticky || !useCaseTrack || useCaseCards.length === 0) return;
+
+                const shellRect = useCaseShell.getBoundingClientRect();
+                const stickyHeight = useCaseSticky.offsetHeight;
+                const trackWidth = useCaseTrack.scrollWidth;
+                const viewportWidth = useCaseSticky.clientWidth;
+                const scrollDistance = Math.max(trackWidth - viewportWidth, 0);
+                const leadIn = window.innerWidth <= 768
+                    ? Math.max(window.innerHeight * 0.28, 170)
+                    : Math.max(window.innerHeight * 0.32, 220);
+                const horizontalRange = Math.max(useCaseShell.offsetHeight - stickyHeight - leadIn, 1);
+                const traveled = Math.max(-shellRect.top, 0);
+                const horizontalTravel = Math.min(Math.max(traveled - leadIn, 0), horizontalRange);
+                const progress = scrollDistance > 0 ? horizontalTravel / horizontalRange : 0;
+                const translateX = scrollDistance * progress;
+
+                useCaseTargetX = translateX;
+                queueUseCaseRender();
+            }
+
+            function stopSetupAutoSlide() {
+                if (setupAutoSlideTimer) {
+                    window.clearInterval(setupAutoSlideTimer);
+                    setupAutoSlideTimer = null;
+                }
+            }
+
+            function scrollSetupCardIntoView(index) {
+                if (!setupGrid || setupSteps.length === 0) return;
+
+                const nextIndex = ((index % setupSteps.length) + setupSteps.length) % setupSteps.length;
+                const nextCard = setupSteps[nextIndex];
+                if (!nextCard) return;
+
+                setupAutoSlideIndex = nextIndex;
+                setupGrid.scrollTo({
+                    left: nextCard.offsetLeft,
+                    behavior: "smooth"
+                });
+            }
+
+            function startSetupAutoSlide() {
+                if (!setupGrid || setupSteps.length <= 1 || window.innerWidth > 768 || prefersReducedMotion) return;
+                if (setupAutoSlideTimer || !setupAutoSlideActive) return;
+
+                setupAutoSlideTimer = window.setInterval(() => {
+                    scrollSetupCardIntoView(setupAutoSlideIndex + 1);
+                }, 2600);
+            }
+
+            function scheduleSetupAutoSlideResume() {
+                if (setupAutoSlideResumeTimer) {
+                    window.clearTimeout(setupAutoSlideResumeTimer);
+                }
+
+                stopSetupAutoSlide();
+
+                if (!setupAutoSlideActive || window.innerWidth > 768 || prefersReducedMotion) return;
+
+                setupAutoSlideResumeTimer = window.setTimeout(() => {
+                    startSetupAutoSlide();
+                }, 2200);
+            }
+
+            function syncSetupAutoSlideIndex() {
+                if (!setupGrid || setupSteps.length === 0) return;
+
+                const currentScroll = setupGrid.scrollLeft;
+                let nearestIndex = 0;
+                let nearestDistance = Number.POSITIVE_INFINITY;
+
+                setupSteps.forEach((step, index) => {
+                    const distance = Math.abs(step.offsetLeft - currentScroll);
+                    if (distance < nearestDistance) {
+                        nearestDistance = distance;
+                        nearestIndex = index;
+                    }
+                });
+
+                setupAutoSlideIndex = nearestIndex;
+            }
+
+            function setupMobileSetupCards() {
+                if (!setupSection || !setupGrid || setupSteps.length <= 1 || prefersReducedMotion) return;
+
+                if (setupAutoSlideObserver) {
+                    setupAutoSlideObserver.disconnect();
+                }
+
+                setupAutoSlideObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        setupAutoSlideActive = entry.isIntersecting;
+                        if (setupAutoSlideActive && window.innerWidth <= 768) {
+                            syncSetupAutoSlideIndex();
+                            startSetupAutoSlide();
+                        } else {
+                            stopSetupAutoSlide();
+                        }
+                    });
+                }, {
+                    threshold: 0.55
+                });
+
+                setupAutoSlideObserver.observe(setupSection);
+
+                setupGrid.addEventListener("scroll", syncSetupAutoSlideIndex, { passive: true });
+                setupGrid.addEventListener("touchstart", scheduleSetupAutoSlideResume, { passive: true });
+                setupGrid.addEventListener("pointerdown", scheduleSetupAutoSlideResume, { passive: true });
+            }
+
+            syncScrollGradient();
+            setupHeroTypingAnimation();
+            setupMobileSetupCards();
+            setupUseCaseScroller();
+            syncUseCaseScroller();
+            revealNow(useCaseTrack);
+
+            if (!prefersReducedMotion) {
+                let ticking = false;
+                window.addEventListener("scroll", function () {
+                    if (!ticking) {
+                        window.requestAnimationFrame(function () {
+                            syncScrollGradient();
+                            syncUseCaseScroller();
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                }, { passive: true });
+            }
+
+            window.addEventListener("resize", function () {
+                syncSetupAutoSlideIndex();
+                if (window.innerWidth > 768) {
+                    stopSetupAutoSlide();
+                } else if (setupAutoSlideActive) {
+                    startSetupAutoSlide();
+                }
+                setupUseCaseScroller();
+                syncUseCaseScroller();
+            });
+        });
+    </script>
+</body>
+</html>
